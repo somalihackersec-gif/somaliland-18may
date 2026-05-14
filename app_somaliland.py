@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 
-# 1. Diyaarinta Database-ka
+# 1. Diyaarinta Database-ka (SQLite)
 def bilow_database():
     conn = sqlite3.connect('somaliland_18may.db')
     cursor = conn.cursor()
@@ -26,7 +26,7 @@ def bilow_database():
 
 bilow_database()
 
-# 2. Tirada Booqashada (Views)
+# 2. Tirada Booqashada (Views Counter)
 def kordhi_views():
     conn = sqlite3.connect('somaliland_18may.db')
     cursor = conn.cursor()
@@ -38,42 +38,62 @@ if 'viewed' not in st.session_state:
     kordhi_views()
     st.session_state.viewed = True
 
-# 3. Habaynta Muuqaalka Nadiifka ah (Light Mode rasmiga ahaa)
-st.set_page_config(page_title="18 May Online", page_icon="", layout="centered")
+# 3. Habaynta Muuqaalka iyo Midabada (UI Theme)
+st.set_page_config(page_title="18 May Online", page_icon="🇸🇴", layout="centered")
 
 st.markdown("""
     <style>
+    /* Muuqaalka Guud ee Bogga */
     .stApp {
-        background-color: #ffffff;
-        color: #000000;
+        background-color: #ffffff !important;
+        color: #1e293b !important;
     }
+    /* Sanduuqyada Qoraalka (Inputs) */
     .stTextInput>div>div>input, .stSelectbox>div>div>select {
-        background-color: #f0f2f6;
-        color: #000000;
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 2px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
     }
+    /* Badhamada (Buttons) */
     .stButton>button {
-        background-color: #10B981;
-        color: white;
-        border-radius: 8px;
-        height: 3em;
-        font-weight: bold;
+        background-color: #10B981 !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        border: none !important;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1) !important;
     }
-    h1, h2, h3 {
-        color: #10B981;
+    .stButton>button:hover {
+        background-color: #059669 !important;
+        color: #ffffff !important;
+    }
+    /* Qoraaladii madoobaaday ee halkan lagu caddeeyey */
+    h1, h2, h3, label, p, .stMarkdown {
+        color: #0f172a !important;
+        font-weight: bold !important;
+    }
+    /* Midabka Cinwaanka Weyn */
+    .main-title {
+        color: #10B981 !important;
+        text-align: center;
     }
     </style>
     """, unsafe_allow_html=True)
 
 calanka_url = "https://upload.wikimedia.org/wikipedia/commons/4/4d/Flag_of_Somaliland.svg"
 
-# 4. Hubinta URL-ka (Haddii link-ga korkiisa laga soo qoro ?page=admin)
+# 4. Hubinta URL Sirta ah ee Admin Panel-ka (Token Ammaan ah)
 query_params = st.query_params
-halkay_joogto = query_params.get("page", "user")
+admin_key = query_params.get("key", "user")
 
-# --- BOGGA ADMIN-KA (WAA KAN SIRTA AH EE QOFNA ARKI KARIN EE URL-KA LAGA SOO GALAYO) ---
-if halkay_joogto == "admin":
-    st.title("🔐 Dashboard-ka Maamulka (Sir ah)")
-    password_input = st.text_input("Geli Password-ka Admin-ka:", type="password")
+# --- BOGGA ADMIN-KA (WAA KAN SIRTA AH - LINK-GA KORKIISA AYAA LAGA DEYRAYAA) ---
+if admin_key == "9a2b8c4e7f":
+    st.markdown("<h1 class='main-title'>🔐 Dashboard-ka Maamulka (Sir ah)</h1>", unsafe_allow_html=True)
+    password_input = st.text_input("Geli Password-ka Maamulka:", type="password")
     
     if password_input == "Somaliland2026":
         st.success("Access Granted! Kusoo dhowaw Admin Panel.")
@@ -103,14 +123,14 @@ if halkay_joogto == "admin":
     elif password_input != "":
         st.error("Password-ku waa khaldan yahay!")
 
-# --- BOGGA CAADIGA AH (CID KASTA UU U FURMAYO) ---
+# --- BOGGA USER-KA (KAN CID KASTA U FURMAYA MARKA LINK-GA LA GUJINDAYO) ---
 else:
     if 'page' not in st.session_state:
         st.session_state.page = 'registration'
 
     if st.session_state.page == 'registration':
         st.image(calanka_url, width=180)
-        st.title(" Nala Dabaal-deg 18 May ")
+        st.markdown("<h1 class='main-title'>🇸🇴 Nala Dabaal-deg 18 May 🇸🇴</h1>", unsafe_allow_html=True)
         st.video("https://youtu.be/Q0aWxMLdHFo")
         
         st.markdown("### Is-diiwaangeli si aad u guulaysato")
@@ -141,7 +161,7 @@ else:
     elif st.session_state.page == 'success':
         st.balloons()
         st.image(calanka_url, width=180)
-        st.header("🎊 WAAD GUULEYSATAY! 🎊")
+        st.markdown("<h2 style='color:#10B981; text-align:center;'>🎊 WAAD GUULEYSATAY! 🎊</h2>", unsafe_allow_html=True)
         st.success("Xogtaada si guul leh ayaa loo kaydiyey. Waad ku mahadsan tahay qayb-qaashadaada!")
         
         if st.button("Ku laabo Bogga Hore"):
