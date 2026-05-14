@@ -38,32 +38,24 @@ if 'viewed' not in st.session_state:
     kordhi_views()
     st.session_state.viewed = True
 
-# Link-ga Cusub ee Calanka (Sawirka aad soo dirtay)
+# Link-ga Calanka
 sawirka_cusub_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707"
 
-# 3. Muuqaal Casri ah oo Madow (Premium Dark & Neon Green Theme)
+# 3. Muuqaalka Madow (Dark Mode for Mobile & Desktop)
 st.set_page_config(page_title="18 May Online", page_icon=sawirka_cusub_url, layout="centered")
 
 st.markdown("""
     <style>
-    /* Background-ka guud oo madow ah */
     .stApp {
         background-color: #0d1117 !important;
         color: #c9d1d9 !important;
     }
-    
-    /* Sanduuqyada qoraalka laga qoro (Input Fields) */
     .stTextInput>div>div>input, .stSelectbox>div>div>select {
         background-color: #161b22 !important;
         color: #ffffff !important;
         border: 2px solid #30363d !important;
         border-radius: 8px !important;
     }
-    .stTextInput>div>div>input:focus, .stSelectbox>div>div>select:focus {
-        border-color: #10B981 !important;
-    }
-
-    /* Badhamada (Buttons) oo cagaar ifaya ah */
     .stButton>button {
         background-color: #10B981 !important;
         color: #000000 !important;
@@ -72,40 +64,30 @@ st.markdown("""
         height: 3em !important;
         width: 100% !important;
         border: none !important;
-        box-shadow: 0px 4px 10px rgba(16, 185, 129, 0.3) !important;
     }
-    .stButton>button:hover {
-        background-color: #059669 !important;
-        color: #ffffff !important;
-    }
-
-    /* Qoraalada iyo Labels-ka oo caddaan iyo cagaar ah si ay madowga uga dhex ifaan */
     h1, h2, h3 {
         color: #10B981 !important;
         font-weight: bold !important;
-        text-shadow: 0px 0px 8px rgba(16, 185, 129, 0.2);
     }
     label, p, .stMarkdown {
         color: #ffffff !important;
         font-weight: bold !important;
     }
-    
-    /* Habaynta Metric-ga Admin-ka */
-    [data-testid="stMetricValue"] {
-        color: #10B981 !important;
-    }
-    [data-testid="stMetricLabel"] {
-        color: #ffffff !important;
-    }
+    [data-testid="stMetricValue"] { color: #10B981 !important; }
+    [data-testid="stMetricLabel"] { color: #ffffff !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# 4. Hubinta URL Sirta ah ee Admin Panel-ka
+# 4. Hubinta URL-ka (Wuxuu hadda u shaqaynayaa si ka jilicsan moobilka)
 query_params = st.query_params
-admin_key = query_params.get("key", "user")
+is_admin_url = "key" in query_params and query_params["key"] == "9a2b8c4e7f"
 
-# --- BOGGA ADMIN-KA (SIR AH - LINK-GA KORKIISA LAGA SOO GALO) ---
-if admin_key == "9a2b8c4e7f":
+# Session state si loogu maamulo haddii koodhka sirta ah la isticmaalo
+if 'admin_logged' not in st.session_state:
+    st.session_state.admin_logged = False
+
+# Tikidhka gelitaanka Admin-ka
+if is_admin_url or st.session_state.admin_logged:
     st.image(sawirka_cusub_url, width=180)
     st.title("Dashboard-ka Maamulka (Sir ah)")
     password_input = st.text_input("Geli Password-ka Maamulka:", type="password")
@@ -135,11 +117,10 @@ if admin_key == "9a2b8c4e7f":
             st.table([{"ID": r[0], "Magaca": r[1], "Telefoonka": r[2], "Gobolka": r[3], "Xafadda": r[4]} for r in data])
         else:
             st.info("Weli ma jiro qof is-diiwaangeliyey.")
-            
     elif password_input != "":
         st.error("Password-ku waa khaldan yahay!")
 
-# --- BOGGA USER-KA (KAN CID KASTA UU U FURMAYO) ---
+# --- BOGGA USER-KA ---
 else:
     if 'page' not in st.session_state:
         st.session_state.page = 'registration'
@@ -159,7 +140,12 @@ else:
             submit = st.form_submit_button("Submit Xogta")
             
             if submit:
-                if magaca and telefoonka and xafada:
+                # NAGU CELI ADMIN HADDII KOODHKA SIRTA AH LA GELIYO
+                if magaca.strip() == "ADMIN777":
+                    st.session_state.admin_logged = True
+                    st.rerun()
+                
+                elif magaca and telefoonka and xafada:
                     try:
                         conn = sqlite3.connect('somaliland_18may.db')
                         cursor = conn.cursor()
