@@ -21,7 +21,7 @@ bilow_database()
 calanka_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707"
 
 # 3. SETTINGS & CSS (Qarinta Badhamada & Bilicda)
-st.set_page_config(page_title="18 May Online", page_icon="with col2: st.image(calanka_url, width=100)" layout="centered")
+st.set_page_config(page_title="happy 18 May ", page_icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707", layout="centered")
 
 st.markdown("""
     <style>
