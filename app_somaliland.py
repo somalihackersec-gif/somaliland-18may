@@ -38,61 +38,45 @@ if 'viewed' not in st.session_state:
     kordhi_views()
     st.session_state.viewed = True
 
-# 3. Habaynta Muuqaalka iyo Midabada (UI Theme)
-st.set_page_config(page_title="18 May Online", page_icon="🇸🇴", layout="centered")
+# 3. Muuqaalkii bilowgii ee Nadiifka ahaa (White & Green Theme)
+st.set_page_config(page_title="18 May Online", page_icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707", layout="centered")
 
 st.markdown("""
     <style>
-    /* Muuqaalka Guud ee Bogga */
+    /* Dib ugu celinta nidaamkii caddaan iyo cagaar ee nadiifka ahaa */
     .stApp {
         background-color: #ffffff !important;
-        color: #1e293b !important;
+        color: #000000 !important;
     }
-    /* Sanduuqyada Qoraalka (Inputs) */
     .stTextInput>div>div>input, .stSelectbox>div>div>select {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        border: 2px solid #cbd5e1 !important;
-        border-radius: 8px !important;
-        font-weight: bold !important;
+        background-color: #f0f2f6 !important;
+        color: #000000 !important;
     }
-    /* Badhamada (Buttons) */
     .stButton>button {
         background-color: #10B981 !important;
-        color: #ffffff !important;
+        color: white !important;
         border-radius: 8px !important;
         font-weight: bold !important;
-        font-size: 16px !important;
-        width: 100% !important;
-        border: none !important;
-        box-shadow: 0px 4px 6px rgba(0,0,0,0.1) !important;
+        height: 3em !important;
     }
-    .stButton>button:hover {
-        background-color: #059669 !important;
-        color: #ffffff !important;
-    }
-    /* Qoraaladii madoobaaday ee halkan lagu caddeeyey */
-    h1, h2, h3, label, p, .stMarkdown {
-        color: #0f172a !important;
-        font-weight: bold !important;
-    }
-    /* Midabka Cinwaanka Weyn */
-    .main-title {
+    h1, h2, h3, label {
         color: #10B981 !important;
-        text-align: center;
+        font-weight: bold !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-calanka_url = "https://upload.wikimedia.org/wikipedia/commons/4/4d/Flag_of_Somaliland.svg"
+# Link-ga Cusub ee Aad Hadda Soo Dirtay (Kani wuxuu beddelayaa calankii hore meel kasta)
+sawirka_cusub_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707"
 
-# 4. Hubinta URL Sirta ah ee Admin Panel-ka (Token Ammaan ah)
+# 4. Hubinta URL Sirta ah ee Admin Panel-ka
 query_params = st.query_params
 admin_key = query_params.get("key", "user")
 
-# --- BOGGA ADMIN-KA (WAA KAN SIRTA AH - LINK-GA KORKIISA AYAA LAGA DEYRAYAA) ---
+# --- BOGGA ADMIN-KA (SIR AH - LINK-GA KORKIISA LAGA SOO GALO) ---
 if admin_key == "9a2b8c4e7f":
-    st.markdown("<h1 class='main-title'>🔐 Dashboard-ka Maamulka (Sir ah)</h1>", unsafe_allow_html=True)
+    st.image(sawirka_cusub_url, width=180)  # Meesha 1aad ee sawirka cusub
+    st.title("🔐 Dashboard-ka Maamulka (Sir ah)")
     password_input = st.text_input("Geli Password-ka Maamulka:", type="password")
     
     if password_input == "Somaliland2026":
@@ -123,14 +107,14 @@ if admin_key == "9a2b8c4e7f":
     elif password_input != "":
         st.error("Password-ku waa khaldan yahay!")
 
-# --- BOGGA USER-KA (KAN CID KASTA U FURMAYA MARKA LINK-GA LA GUJINDAYO) ---
+# --- BOGGA USER-KA (KAN CID KASTA UU U FURMAYO) ---
 else:
     if 'page' not in st.session_state:
         st.session_state.page = 'registration'
 
     if st.session_state.page == 'registration':
-        st.image(calanka_url, width=180)
-        st.markdown("<h1 class='main-title'>🇸🇴 Nala Dabaal-deg 18 May 🇸🇴</h1>", unsafe_allow_html=True)
+        st.image(sawirka_cusub_url, width=180)  # Meesha 2aad ee sawirka cusub
+        st.title("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707  Nala Dabaal-deg 18 May https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707")
         st.video("https://youtu.be/Q0aWxMLdHFo")
         
         st.markdown("### Is-diiwaangeli si aad u guulaysato")
@@ -160,8 +144,8 @@ else:
 
     elif st.session_state.page == 'success':
         st.balloons()
-        st.image(calanka_url, width=180)
-        st.markdown("<h2 style='color:#10B981; text-align:center;'>🎊 WAAD GUULEYSATAY! 🎊</h2>", unsafe_allow_html=True)
+        st.image(sawirka_cusub_url, width=180)  # Meesha 3aad ee sawirka cusub
+        st.header("🎊 WAAD GUULEYSATAY! 🎊")
         st.success("Xogtaada si guul leh ayaa loo kaydiyey. Waad ku mahadsan tahay qayb-qaashadaada!")
         
         if st.button("Ku laabo Bogga Hore"):
