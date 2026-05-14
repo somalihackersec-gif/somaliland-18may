@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 
-# 1. DATABASE SETUP
+# 1. DATABASE SETUP (Amniga SQL-ka)
 def bilow_database():
     conn = sqlite3.connect('somaliland_18may.db')
     cursor = conn.cursor()
@@ -17,23 +17,22 @@ bilow_database()
 # 2. CALANKA URL
 calanka_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707"
 
-# 3. SETTINGS & CSS
+# 3. SETTINGS & CSS (Qarinta Toolbar-ka iyo Bilicda)
 st.set_page_config(page_title="18 May Online", page_icon=calanka_url, layout="centered")
 
 st.markdown("""
     <style>
-    /* Qari Toolbar-ka iyo Gmail-ka (Si qofna uusan u arkin xogtaada) */
     [data-testid="stStatusWidget"], .stAppDeployButton, #MainMenu, header, footer {
         visibility: hidden;
         display: none !important;
     }
     .stApp { background-color: #0d1117 !important; color: white !important; }
     
-    /* Qurxinta Input-yada */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background-color: #161b22 !important;
         color: white !important;
         border: 1px solid #10B981 !important;
+        border-radius: 8px;
     }
     
     .stButton>button {
@@ -45,55 +44,19 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 4. MAAMULKA BOGAGGA (Session State)
-if 'bogga_guusha' not in st.session_state:
-    st.session_state.bogga_guusha = False
+# 4. MAAMULKA BOGAGGA
+if 'guul' not in st.session_state:
+    st.session_state.guul = False
 
-# --- BOGGA 2AAD: HADDI QOFKU GUULEYSTO ---
-if st.session_state.bogga_guusha:
+# --- BOGGA 2AAD: GUUSHA + RAYIGA + COMMENTS ---
+if st.session_state.guul:
     st.balloons()
-    st.image(calanka_url, width=150)
+    st.image(calanka_url, width=120)
     st.title("🎊 Waad Guulaysatay!")
-    st.success("Rayigaaga si guul leh ayaa loo qabtay. Waad ku mahadsantahay hambalyadaada!")
+    st.success("Xogtaada tartanka si guul leh ayaa loo qabtay!")
     
-    if st.button("Ku noqo Bogga Hore"):
-        st.session_state.bogga_guusha = False
-        st.rerun()
-
-# --- BOGGA 1AAD: BOGGA WEYN ---
-else:
-    st.image(calanka_url, use_container_width=True)
-    st.video("https://youtu.be/Q0aWxMLdHFo")
-    
-    st.title("Somaliland 18 May ")
-    st.info("Fadlan buuxi xogtaada hoose si aad uga qayb gasho tartanka.")
-
-    # A. FOOMKA TARTANKA
-    st.subheader("📝 Is-diiwaangeli Tartanka")
-    with st.form("form_tartanka"):
-        magaca = st.text_input("Magacaaga oo Buuxa")
-        tel = st.text_input("Telefoonkaaga")
-        gobol = st.selectbox("Gobolka", ["Maroodijeex", "Togdheer", "Awdal", "Saaxil", "Sanaag", "Sool"])
-        xafad = st.text_input("Xafadda")
-        submit_t = st.form_submit_button("Submit Tartanka")
-        
-        if submit_t:
-            if magaca and tel:
-                try:
-                    conn = sqlite3.connect('somaliland_18may.db')
-                    cursor = conn.cursor()
-                    cursor.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada) VALUES (?,?,?,?)', (magaca, tel, gobol, xafad))
-                    conn.commit()
-                    conn.close()
-                    st.success("Waad is-diiwaangelisay!")
-                except:
-                    st.error("Lambarkan hore ayaa loo isticmaalay.")
-            else:
-                st.warning("Buuxi magaca iyo telefoonka.")
-
     st.write("---")
-
-    # B. QAYBTA RAYIGA
+    # Qaybta Rayiga (Comments Form)
     st.subheader("💬 Dhiibo Rayigaaga (Hambalyo)")
     with st.form("form_rayiga"):
         r_magaca = st.text_input("Magacaaga")
@@ -107,23 +70,55 @@ else:
                 cursor.execute('INSERT INTO rayiga (magaca, faallada) VALUES (?,?)', (r_magaca, r_faallo))
                 conn.commit()
                 conn.close()
-                
-                # HALKAN AYUU BOGGU ISKU BEDDELAYAA
-                st.session_state.bogga_guusha = True
-                st.rerun()
+                st.info("Waad ku mahadsantahay rayigaaga!")
             else:
                 st.warning("Fadlan buuxi meelaha bannaan.")
 
-    # C. SOO BANDHIGISTA RAYIGA
+    # Soo bandhigista Comments-ka
     st.write("### Hambalyada Dadweynaha:")
     conn = sqlite3.connect('somaliland_18may.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT magaca, faallada FROM rayiga ORDER BY id DESC LIMIT 5')
+    cursor.execute('SELECT magaca, faallada FROM rayiga ORDER BY id DESC LIMIT 10')
     rows = cursor.fetchall()
     conn.close()
     
     for r in rows:
         st.markdown(f"**👤 {r[0]}:** {r[1]}")
+    
+    if st.button("← Ku noqo Bogga Tartanka"):
+        st.session_state.guul = False
+        st.rerun()
+
+# --- BOGGA 1AAD: TARTANKA KALIYA ---
+else:
+    st.image(calanka_url, use_container_width=True)
+    st.title("Somaliland 18 May")
+    st.info("Fadlan buuxi xogtaada hoose si aad uga qayb gasho tartanka.")
+
+    st.subheader("📝 Is-diiwaangeli Tartanka")
+    with st.form("form_tartanka"):
+        magaca = st.text_input("Magacaaga oo Buuxa")
+        tel = st.text_input("Telefoonkaaga")
+        gobol = st.selectbox("Gobolka", ["Maroodijeex", "Togdheer", "Awdal", "Saaxil", "Sanaag", "Sool"])
+        xafad = st.text_input("Xafadda")
+        submit_t = st.form_submit_button("Submit Tartanka")
+        
+        if submit_t:
+            if magaca and tel and xafad:
+                try:
+                    conn = sqlite3.connect('somaliland_18may.db')
+                    cursor = conn.cursor()
+                    cursor.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada) VALUES (?,?,?,?)', (magaca, tel, gobol, xafad))
+                    conn.commit()
+                    conn.close()
+                    
+                    # U gudbi Bogga 2aad
+                    st.session_state.guul = True
+                    st.rerun()
+                except:
+                    st.error("Lambarkan hore ayaa loo isticmaalay.")
+            else:
+                st.warning("Fadlan wada buuxi foomka.")
 
     st.write("---")
     st.write("Guul iyo Gobanimo Somaliland - 2026")
