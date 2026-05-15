@@ -16,7 +16,7 @@ bilow_database()
 # 2. CONFIGURATION (Heer Calami)
 st.set_page_config(
     page_title="Somaliland 18 May | Official",
-    page_icon="(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10", width=100)",
+    page_icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10", width=100",
     layout="wide", # Shaashad ballaadhan sidii sawirka aad soo dirtay
     initial_sidebar_state="expanded"
 )
