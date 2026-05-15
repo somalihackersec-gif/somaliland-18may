@@ -6,139 +6,164 @@ import pandas as pd
 def bilow_database():
     conn = sqlite3.connect('somaliland_18may.db')
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS tartamayaasha 
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT, magaca TEXT, telefoonka TEXT UNIQUE, gobolka TEXT, xafada TEXT)''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS rayiga 
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT, magaca TEXT, faallada TEXT)''')
+    cursor.execute('CREATE TABLE IF NOT EXISTS tartamayaasha (id INTEGER PRIMARY KEY AUTOINCREMENT, magaca TEXT, telefoonka TEXT UNIQUE, gobolka TEXT, xafada TEXT)')
+    cursor.execute('CREATE TABLE IF NOT EXISTS rayiga (id INTEGER PRIMARY KEY AUTOINCREMENT, magaca TEXT, faallada TEXT)')
     conn.commit()
     conn.close()
 
 bilow_database()
 
-# 2. CALANKA URL
-calanka_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10&ec=121691707"
+# 2. CONFIGURATION (Heer Calami)
+st.set_page_config(
+    page_title="Somaliland 18 May | Official",
+    page_icon="(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10", width=100)",
+    layout="wide", # Shaashad ballaadhan sidii sawirka aad soo dirtay
+    initial_sidebar_state="expanded"
+)
 
-# 3. SETTINGS & CSS (Qarinta Toolbar-ka iyo Bilicda)
-st.set_page_config(page_title="18 May Online", page_icon=calanka_url, layout="centered")
-
+# 3. CUSTOM CSS (Tani waa sirtii Exifa.net)
 st.markdown("""
     <style>
+    /* Qarinta Toolbar-ka Streamlit */
     [data-testid="stStatusWidget"], .stAppDeployButton, #MainMenu, header, footer {
-        visibility: hidden;
-        display: none !important;
+        visibility: hidden; display: none !important;
     }
-    .stApp { background-color: #0d1117 !important; color: white !important; }
-    
-    /* Input Style */
-    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background-color: #161b22 !important;
+
+    /* Background-ka oo ah mid madow oo qurux badan */
+    .stApp {
+        background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+        color: #f8fafc;
+    }
+
+    /* Sidebar-ka oo laga dhigay mid casri ah */
+    [data-testid="stSidebar"] {
+        background-color: rgba(30, 41, 59, 0.7) !important;
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Card-yada Rayiga */
+    .comment-card {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+        border-left: 5px solid #10b981;
+        transition: 0.3s;
+    }
+    .comment-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(10px);
+    }
+
+    /* Input Fields Style */
+    .stTextInput input, .stSelectbox div, .stTextArea textarea {
+        background-color: rgba(255,255,255,0.05) !important;
         color: white !important;
-        border: 1px solid #10B981 !important;
-        border-radius: 8px;
+        border-radius: 10px !important;
+        border: 1px solid rgba(16, 185, 129, 0.3) !important;
     }
-    
+
     /* Button Style */
-    .stButton>button {
-        background-color: #10B981 !important;
-        color: black !important;
-        width: 100%;
-        font-weight: bold;
-        border-radius: 10px;
+    .stButton button {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px 25px !important;
+        font-weight: bold !important;
+        transition: 0.5s !important;
     }
-    
-    /* Share Button Styling */
-    .share-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #25D366;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        text-align: center;
-        width: 100%;
+    .stButton button:hover {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        transform: scale(1.02);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 4. MAAMULKA BOGAGGA
-if 'guul' not in st.session_state:
-    st.session_state.guul = False
-
-# --- BOGGA 2AAD: GUUSHA + VIRAL SHARE + DASHBOARD ---
-if st.session_state.guul:
-    st.balloons()
-    st.image(calanka_url, width=100)
-    st.title("🎊 Waad ku Jirtaa Tartanka!")
-    st.success("Xogtaada si guul leh ayaa loo qabtay. Waxaad fursad u leedahay inaad ku guulaysato abaal-marino qaali ah!")
-
-    # A. VIRAL SHARE BUTTON (WhatsApp)
-    share_text = "Saaxiib, anigu waxaan is-diiwaangeliyey tartanka weyn ee 18-ka May! Kaalay adna oo is-diiwaangeli halkan: https://18may-somaliland.streamlit.app"
-    whatsapp_url = f"https://wa.me/?text={share_text.replace(' ', '%20')}"
+# 4. SIDEBAR (Halkan waxaan dhigaynaa Is-diiwaangelinta)
+with st.sidebar:
+    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10", width=100)
+    st.title("18may-somaliland")
+    st.markdown("---")
+    st.subheader("📝 Is-diiwaangeli Tartanka")
     
-    st.markdown(f'<a href="{whatsapp_url}" target="_blank" class="share-btn">📢 La wadaag asxaabtaada WhatsApp (Viral)</a>', unsafe_allow_html=True)
-    st.write("---")
-
-    # B. DASHBOARD-KA GOBOLADA (Competition Mode)
-    st.subheader("📊 Tartanka Gobollada (Yaa Hoggaaminaya?)")
-    conn = sqlite3.connect('somaliland_18may.db')
-    df = pd.read_sql_query("SELECT gobolka, COUNT(*) as tirada FROM tartamayaasha GROUP BY gobolka", conn)
-    conn.close()
-
-    if not df.empty:
-        st.bar_chart(df.set_index('gobolka'))
-        hoggaanka = df.loc[df['tirada'].idxmax()]['gobolka']
-        st.info(f"🏆 Hadda waxaa hoggaaminaya Gobolka: **{hoggaanka}**")
-    
-    st.write("---")
-    # Qaybta Rayiga
-    st.subheader("💬 Hambalyadaada 18 May")
-    with st.form("form_rayiga"):
-        r_magaca = st.text_input("Magacaaga")
-        r_faallo = st.text_area("Maxaad u rajaynaysaa dalkaaga?")
-        submit_r = st.form_submit_button("Soo Gudbi")
-        if submit_r and r_magaca and r_faallo:
-            conn = sqlite3.connect('somaliland_18may.db')
-            cursor = conn.cursor()
-            cursor.execute('INSERT INTO rayiga (magaca, faallada) VALUES (?,?)', (r_magaca, r_faallo))
-            conn.commit()
-            conn.close()
-            st.rerun()
-
-    if st.button("← Ku noqo Bogga Tartanka"):
-        st.session_state.guul = False
-        st.rerun()
-
-# --- BOGGA 1AAD: TARTANKA ---
-else:
-    st.image(calanka_url, use_container_width=True)
-    st.title("Somaliland 18 May 🇸🇴")
-    st.markdown("#### Ka qayb-gal tartanka weyn ee 18-ka May ka dibna la wadaag asxaabtaada!")
-    
-    # Competition Incentive
-    st.warning("🎁 5-ta qof ee ugu horraysa ee Gobol kasta laga soo xulo waxay heli doonaan abaal-marino!")
-
-    with st.form("form_tartanka"):
+    with st.form("tartanka_form"):
         magaca = st.text_input("Magacaaga oo Buuxa")
-        tel = st.text_input("Telefoonkaaga")
+        tel = st.text_input("Telefoonka")
         gobol = st.selectbox("Gobolka", ["Maroodijeex", "Togdheer", "Awdal", "Saaxil", "Sanaag", "Sool"])
-        xafad = st.text_input("Xafadda")
-        submit_t = st.form_submit_button("Submit & Eeg Natiijada")
+        submit_t = st.form_submit_button("Submit Registration")
         
         if submit_t:
-            if magaca and tel and xafad:
+            if magaca and tel:
                 try:
                     conn = sqlite3.connect('somaliland_18may.db')
                     cursor = conn.cursor()
-                    cursor.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada) VALUES (?,?,?,?)', (magaca, tel, gobol, xafad))
+                    cursor.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada) VALUES (?,?,?,?)', (magaca, tel, gobol, "N/A"))
                     conn.commit()
                     conn.close()
-                    st.session_state.guul = True
-                    st.rerun()
+                    st.success("✅ Waad is-diiwaangelisay!")
+                    st.balloons()
                 except:
-                    st.error("Lambarkan hore ayaa loo isticmaalay.")
+                    st.error("Lambar hore ayaa jira!")
             else:
-                st.warning("Fadlan wada buuxi foomka.")
+                st.warning("Fadlan buuxi xogta.")
 
+    st.markdown("---")
+    st.info("App-kan waxaa lagu dhisay tiknoolajiyad casri ah si loogu dabbaal-dego maalinta Qaranka.")
+
+# 5. SHAASHADDA DHEXE (Main Content)
+# Ku dar Baraf ama Snow sidii sawirka labaad
+st.snow() 
+
+col_main, col_stats = st.columns([2, 1])
+
+with col_main:
+    st.markdown("#  Somaliland 2026 | National Day")
+    st.video("https://youtu.be/Q0aWxMLdHFo")
+    
     st.write("---")
-    st.caption("Guul iyo Gobanimo Somaliland - 2026")
+    st.subheader("💬 Dhiibo Rayigaaga (Hambalyo)")
+    with st.form("rayiga_form"):
+        r_magaca = st.text_input("Magacaaga (Rayiga)")
+        r_faallo = st.text_area("Hambalyadaada")
+        submit_r = st.form_submit_button("Send Message")
+        
+        if submit_r:
+            if r_magaca and r_faallo:
+                conn = sqlite3.connect('somaliland_18may.db')
+                cursor = conn.cursor()
+                cursor.execute('INSERT INTO rayiga (magaca, faallada) VALUES (?,?)', (r_magaca, r_faallo))
+                conn.commit()
+                conn.close()
+                st.rerun()
+
+with col_stats:
+    st.subheader("📊 Tartanka Gobollada")
+    conn = sqlite3.connect('somaliland_18may.db')
+    df = pd.read_sql_query("SELECT gobolka, COUNT(*) as tirada FROM tartamayaasha GROUP BY gobolka", conn)
+    if not df.empty:
+        st.bar_chart(df.set_index('gobolka'))
+    
+    st.write("### Hambalyada Dadweynaha")
+    cursor = conn.cursor()
+    cursor.execute('SELECT magaca, faallada FROM rayiga ORDER BY id DESC LIMIT 5')
+    rows = cursor.fetchall()
+    conn.close()
+    
+    for r in rows:
+        st.markdown(f"""
+            <div class="comment-card">
+                <b style="color: #10b981;">👤 {r[0]}</b><br>
+                <span>{r[1]}</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+# 6. ADMIN SECRET (Kaliya adiga ayaa geli kara)
+if st.query_params.get("key") == "admin777":
+    st.write("---")
+    st.subheader("🔐 Admin Panel")
+    conn = sqlite3.connect('somaliland_18may.db')
+    df_all = pd.read_sql_query("SELECT * FROM tartamayaasha", conn)
+    st.dataframe(df_all)
+    conn.close()
