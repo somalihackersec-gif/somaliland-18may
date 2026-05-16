@@ -167,7 +167,7 @@ else:
         st.info("Riix meel banaan si aad u xidho sidebar-ka.")
 
     # Main Content
-    st.title("🇸🇴 Somaliland 18 May")
+    st.title(" Somaliland 18 May")
     st.video("https://youtu.be/Q0aWxMLdHFo")
     
     st.write("---")
