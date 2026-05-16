@@ -26,156 +26,170 @@ if 'tracked' not in st.session_state:
     conn.close()
     st.session_state.tracked = True
 
-# 2. CONFIGURATION (Mobilka u habaysan)
+# 2. CONFIGURATION
 calanka_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk24G0SMgJLAP6BzsykgsuLEwMd1IHSXcf6wp2Z3AJhb6xG-bRJ1pWq2-UCP_ER7si8W8RcC_DoB3KNr7x8mR1b69B3zaEOCdnhGsP-Ki0uSwi97Bp&s=10"
 
 st.set_page_config(
-    page_title="18 May | Somaliland",
+    page_title="18 May | Somaliland Official",
     page_icon=calanka_url,
-    layout="wide",
-    initial_sidebar_state="collapsed" # Tani waxay keenaysaa badhanka ≡ ee mobilka
+    layout="wide"
 )
 
-# 3. CUSTOM CSS (Professional & Mobile Friendly)
+# 3. CSS (Bilicda iyo Mobile Optimization)
 st.markdown(f"""
     <style>
-    /* Qari Toolbar-ka Streamlit */
     [data-testid="stStatusWidget"], .stAppDeployButton, #MainMenu, header, footer {{
         visibility: hidden; display: none !important;
     }}
-    
-    /* Background-ka */
     .stApp {{
         background: #020617 !important;
         color: #f8fafc !important;
     }}
-
-    /* Sidebar-ka Mobilka */
-    [data-testid="stSidebar"] {{
-        background-color: rgba(15, 23, 42, 0.95) !important;
-        width: 300px !important;
-    }}
-
-    /* Badhanka Submit-ka */
     .stButton button {{
         background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
         color: white !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-weight: bold !important;
+        height: 3.5em;
         width: 100%;
-        border: none;
-        padding: 10px;
     }}
-
-    /* Rayiga Card-ka */
+    .main-card {{
+        background: rgba(255, 255, 255, 0.03);
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        margin-bottom: 20px;
+    }}
     .comment-card {{
         background: rgba(255, 255, 255, 0.05);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-        border-left: 4px solid #10b981;
-    }}
-    
-    /* Hubi in Video-gu mobilka ku habboonaado */
-    iframe {{
-        width: 100% !important;
-        border-radius: 10px;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border-left: 5px solid #10b981;
     }}
     </style>
     """, unsafe_allow_html=True)
 
-# Animation-ka Calanka (JavaScript)
+# 4. FLAG ANIMATION
 st.components.v1.html(f"""
-    <div id="flags-container" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:9999;"></div>
+    <div id="flags" style="position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:9999;"></div>
     <script>
     function createFlag() {{
-        const container = document.getElementById('flags-container');
+        const container = document.getElementById('flags');
         const flag = document.createElement('img');
         flag.src = '{calanka_url}';
         flag.style.position = 'absolute';
-        flag.style.width = Math.random() * 15 + 10 + 'px';
+        flag.style.width = Math.random() * 20 + 10 + 'px';
         flag.style.left = Math.random() * 100 + 'vw';
         flag.style.top = '-50px';
         flag.style.opacity = Math.random();
         container.appendChild(flag);
         let top = -50;
         const interval = setInterval(() => {{
-            top += 2;
+            top += 2.5;
             flag.style.top = top + 'px';
-            if (top > window.innerHeight) {{
-                clearInterval(interval);
-                container.removeChild(flag);
-            }}
-        }}, 25);
+            if (top > window.innerHeight) {{ clearInterval(interval); container.removeChild(flag); }}
+        }}, 20);
     }}
-    setInterval(createFlag, 500);
+    setInterval(createFlag, 400);
     </script>
 """, height=0)
 
-# 4. MAAMULKA BOGAGGA
+# 5. NAVIGATION LOGIC
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
-# ADMIN TRIGGER
 is_admin = st.query_params.get("key") == "admin777"
 
+# ---------------------------------------------------------
+# BOGGA ADMIN-KA
+# ---------------------------------------------------------
 if is_admin:
-    # --- ADMIN DASHBOARD ---
-    st.title("🛡️ Admin Dashboard")
+    st.title("🛡️ Super-Admin Dashboard")
     conn = sqlite3.connect('somaliland_18may.db')
     df = pd.read_sql_query("SELECT * FROM tartamayaasha", conn)
     views = pd.read_sql_query("SELECT tirada FROM views_counter WHERE id = 1", conn).iloc[0]['tirada']
     conn.close()
 
-    c1, c2 = st.columns(2)
-    c1.metric("Views", views)
-    c2.metric("Users", len(df))
-    st.dataframe(df, use_container_width=True)
-    st.download_button("📥 Download Data", data=df.to_csv(index=False), file_name="data.csv")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Views (Booqasho)", views)
+    c2.metric("Dadka Diiwaangashan", len(df))
+    c3.metric("Status", "Live")
 
-elif st.session_state.page == 'success':
-    # --- BOGGA HAMBALYADA ---
-    st.balloons()
-    st.image(calanka_url, width=100)
-    st.title("🎊 Waad Guulaysatay!")
-    st.success("Xogtaada waa la qabtay. La dabbaal-deg Qaranka 2026!")
-    if st.button("Ku noqo Bogga Hore"):
-        st.session_state.page = 'home'
-        st.rerun()
-
-else:
-    # --- BOGGA HORE ---
-    # Sidebar (≡ Badhanka Mobilka laga furo)
-    with st.sidebar:
-        st.image(calanka_url, width=80)
-        st.subheader("📝 Is-diiwaangeli")
-        with st.form("reg_form"):
-            magaca = st.text_input("Magacaaga")
-            tel = st.text_input("Telefoonka")
-            gobol = st.selectbox("Gobolka", ["Maroodijeex", "Togdheer", "Awdal", "Saaxil", "Sanaag", "Sool"])
-            xafad = st.text_input("Xafadda")
-            if st.form_submit_button("Submit"):
-                if magaca and tel:
-                    conn = sqlite3.connect('somaliland_18may.db')
-                    taariikh = datetime.now().strftime("%Y-%m-%d %H:%M")
-                    conn.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada, taariikhda) VALUES (?,?,?,?,?)', 
-                                 (magaca.strip(), tel.strip(), gobol, xafad.strip(), taariikh))
-                    conn.commit()
-                    conn.close()
-                    st.session_state.page = 'success'
-                    st.rerun()
-        st.info("Riix meel banaan si aad u xidho sidebar-ka.")
-
-    # Main Content
-    st.title(" Somaliland 18 May")
-    st.video("https://youtu.be/Q0aWxMLdHFo")
-    
     st.write("---")
-    col_r, col_stats = st.columns([1.5, 1])
+    tab1, tab2 = st.tabs(["📊 Xogta Guud", "🔍 Raadi Qof"])
+    with tab1:
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Download Excel", data=df.to_csv(index=False), file_name="xogta.csv")
+    with tab2:
+        search = st.text_input("Raadi (Magac/Nambar)")
+        if search:
+            res = df[df.apply(lambda r: search.lower() in r.astype(str).str.lower().values, axis=1)]
+            st.table(res)
+
+# ---------------------------------------------------------
+# BOGGA HAMBALYADA (SUCCESS)
+# ---------------------------------------------------------
+elif st.session_state.page == 'success':
+    st.balloons()
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    col_s1, col_s2, col_s3 = st.columns([1, 2, 1])
+    with col_s2:
+        st.image(calanka_url, width=150)
+        st.title("🎊 Hambalyo!")
+        st.header("Waad ku guulaysatay inaad is-diiwaangeliso.")
+        st.success("Xogtaada si badbaado leh ayaa loo qabtay. 18 May oo wanaagsan!")
+        if st.button("Ku noqo Bogga Hore"):
+            st.session_state.page = 'home'
+            st.rerun()
+
+# ---------------------------------------------------------
+# BOGGA HORE (HOME)
+# ---------------------------------------------------------
+else:
+    # Header Section
+    st.image(calanka_url, width=80)
+    st.title(" Somaliland 18 May | Official")
+    st.markdown("### La dabbaal-deg Qaranka 2026")
     
-    with col_r:
+    col_main, col_side = st.columns([1.6, 1])
+
+    with col_main:
+        st.video("https://youtu.be/Q0aWxMLdHFo")
+        
+        # IS-DIIWAANGELINTA (Hadda waxay ku jirtaa bartamaha)
+        st.write("---")
+        st.subheader("📝 Is-diiwaangelinta Tartanka")
+        with st.form("main_reg_form"):
+            magaca = st.text_input("Magacaaga oo buuxa")
+            tel = st.text_input("Telefoonkaaga")
+            gobol = st.selectbox("Gobolka", ["Maroodijeex", "Togdheer", "Awdal", "Saaxil", "Sanaag", "Sool"])
+            xafad = st.text_input("Xafadda aad deggan tahay")
+            if st.form_submit_button("Submit & Dhammee"):
+                if magaca and tel and xafad:
+                    try:
+                        conn = sqlite3.connect('somaliland_18may.db')
+                        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+                        conn.execute('INSERT INTO tartamayaasha (magaca, telefoonka, gobolka, xafada, taariikhda) VALUES (?,?,?,?,?)', 
+                                     (magaca.strip(), tel.strip(), gobol, xafad.strip(), now))
+                        conn.commit()
+                        conn.close()
+                        st.session_state.page = 'success'
+                        st.rerun()
+                    except: st.error("Lambar hore ayaa jira ama cilad ayaa dhacday.")
+                else: st.warning("Fadlan buuxi meelaha bannaan.")
+
+    with col_side:
+        st.subheader("📊 Tartanka Gobollada")
+        conn = sqlite3.connect('somaliland_18may.db')
+        df_st = pd.read_sql_query("SELECT gobolka, COUNT(*) as tirada FROM tartamayaasha GROUP BY gobolka", conn)
+        conn.close()
+        if not df_st.empty:
+            st.bar_chart(df_st.set_index('gobolka'))
+        
+        st.write("---")
         st.subheader("💬 Rayigaaga")
-        with st.form("rayiga_form"):
+        with st.form("side_rayi"):
             r_magaca = st.text_input("Magaca")
             r_faallo = st.text_area("Hambalyo")
             if st.form_submit_button("Soo Gudbi"):
@@ -186,15 +200,9 @@ else:
                     conn.close()
                     st.rerun()
 
-    with col_stats:
-        st.subheader("📊 Gobollada")
-        conn = sqlite3.connect('somaliland_18may.db')
-        df_stats = pd.read_sql_query("SELECT gobolka, COUNT(*) as tirada FROM tartamayaasha GROUP BY gobolka", conn)
-        conn.close()
-        if not df_stats.empty:
-            st.bar_chart(df_stats.set_index('gobolka'))
-
-    st.write("### Hambalyada Dadweynaha")
+    # Footer Comments
+    st.write("---")
+    st.subheader("Hambalyada Dadweynaha")
     conn = sqlite3.connect('somaliland_18may.db')
     rows = conn.execute('SELECT magaca, faallada FROM rayiga ORDER BY id DESC LIMIT 5').fetchall()
     conn.close()
